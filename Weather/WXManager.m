@@ -110,7 +110,7 @@
 }
 
 - (RACSignal *)updateBackgroundImage {    
-    return [[self.client fetchImageForConditions:self.currentCondition.condition atLocation:self.currentCondition.locationName] doNext:^(id image) {
+    return [[self.client fetchImageForConditions:self.currentCondition.condition] doNext:^(id image) {
         self.backgroundImage = image;
     }];
 }

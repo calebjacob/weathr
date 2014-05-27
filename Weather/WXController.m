@@ -9,6 +9,8 @@
 #import "WXController.h"
 #import <LBBlurredImage/UIImageView+LBBlurredImage.h>
 #import "WXManager.h"
+#import "UIImage+AverageColor.h"
+#import "UIImage+darkenWithColor.h"
 
 @interface WXController ()
 
@@ -76,7 +78,6 @@
     CGFloat circleSize = 200;
     CGFloat temperatureHeight = 60;
     CGFloat hiHeight = 30;
-    CGFloat loHeight = 30;
     CGFloat conditionHeight = 30;
     
     CGRect circleFrame = CGRectMake((headerFrame.size.width - circleSize) / 2,
@@ -106,10 +107,9 @@
     header.backgroundColor = [UIColor clearColor];
     self.tableView.tableHeaderView = header;
     
-    self.circleView = [[UIView alloc] initWithFrame:circleFrame];
-    self.circleView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
-    self.circleView.layer.cornerRadius = circleSize / 2;
-    [header addSubview:self.circleView];
+//    self.circleView = [[UIView alloc] initWithFrame:circleFrame];
+//    self.circleView.layer.cornerRadius = circleSize / 2;
+//    [header addSubview:self.circleView];
     
     UILabel *temperatureLabel = [[UILabel alloc] initWithFrame:temperatureFrame];
     temperatureLabel.backgroundColor = [UIColor clearColor];
@@ -174,7 +174,11 @@
             NSURL *url = [NSURL URLWithString:imageURLString];
             NSData *data = [NSData dataWithContentsOfURL:url];
             UIImage *image = [[UIImage alloc] initWithData:data];
+            UIColor *averageImageColor = [image averageColor];
+            UIColor *backgroundColor = [averageImageColor colorWithAlphaComponent:0.5];
+            
             self.backgroundImageView.image = image;
+            self.tableView.tableHeaderView.backgroundColor = backgroundColor;
             
             [self.blurredImageView setImageToBlur:image blurRadius:10 completionBlock:nil];
         }

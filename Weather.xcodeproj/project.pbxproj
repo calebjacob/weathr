@@ -50,6 +50,8 @@
 		102BBA9C192BE04C005C56D2 /* WXManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 102BBA9B192BE04C005C56D2 /* WXManager.m */; };
 		102BBA9F192BE06A005C56D2 /* WXCondition.m in Sources */ = {isa = PBXBuildFile; fileRef = 102BBA9E192BE06A005C56D2 /* WXCondition.m */; };
 		102BBAA2192BE08F005C56D2 /* WXDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = 102BBAA1192BE08F005C56D2 /* WXDailyForecast.m */; };
+		102BBAAC1934F2AC005C56D2 /* UIImage+averageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 102BBAAB1934F2AC005C56D2 /* UIImage+averageColor.m */; };
+		1082622E19353DEE0038D85B /* UIImage+darkenWithColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1082622D19353DEE0038D85B /* UIImage+darkenWithColor.m */; };
 		18427EF55CD14BE8A019067E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3702CD6B997A458CBAE2C114 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +118,10 @@
 		102BBA9E192BE06A005C56D2 /* WXCondition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXCondition.m; sourceTree = "<group>"; };
 		102BBAA0192BE08F005C56D2 /* WXDailyForecast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDailyForecast.h; sourceTree = "<group>"; };
 		102BBAA1192BE08F005C56D2 /* WXDailyForecast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDailyForecast.m; sourceTree = "<group>"; };
+		102BBAAA1934F2AC005C56D2 /* UIImage+averageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+averageColor.h"; sourceTree = "<group>"; };
+		102BBAAB1934F2AC005C56D2 /* UIImage+averageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+averageColor.m"; sourceTree = "<group>"; };
+		1082622C19353DEE0038D85B /* UIImage+darkenWithColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+darkenWithColor.h"; sourceTree = "<group>"; };
+		1082622D19353DEE0038D85B /* UIImage+darkenWithColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+darkenWithColor.m"; sourceTree = "<group>"; };
 		3702CD6B997A458CBAE2C114 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F40DE0FCC9CC4194AB68E820 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -150,9 +156,9 @@
 			children = (
 				102BB9FC192BBB48005C56D2 /* Weather */,
 				102BBA15192BBB48005C56D2 /* WeatherTests */,
+				F40DE0FCC9CC4194AB68E820 /* Pods.xcconfig */,
 				102BB9F5192BBB47005C56D2 /* Frameworks */,
 				102BB9F4192BBB47005C56D2 /* Products */,
-				F40DE0FCC9CC4194AB68E820 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -185,16 +191,20 @@
 				102BBA92192BC145005C56D2 /* Images */,
 				102BBA08192BBB48005C56D2 /* Images.xcassets */,
 				102BB9FD192BBB48005C56D2 /* Supporting Files */,
+				102BBAAA1934F2AC005C56D2 /* UIImage+averageColor.h */,
+				102BBAAB1934F2AC005C56D2 /* UIImage+averageColor.m */,
+				1082622C19353DEE0038D85B /* UIImage+darkenWithColor.h */,
+				1082622D19353DEE0038D85B /* UIImage+darkenWithColor.m */,
 				102BBA97192BE016005C56D2 /* WXClient.h */,
 				102BBA98192BE016005C56D2 /* WXClient.m */,
-				102BBA25192BBD4C005C56D2 /* WXController.h */,
-				102BBA26192BBD4C005C56D2 /* WXController.m */,
-				102BBA9A192BE04C005C56D2 /* WXManager.h */,
-				102BBA9B192BE04C005C56D2 /* WXManager.m */,
 				102BBA9D192BE06A005C56D2 /* WXCondition.h */,
 				102BBA9E192BE06A005C56D2 /* WXCondition.m */,
+				102BBA25192BBD4C005C56D2 /* WXController.h */,
+				102BBA26192BBD4C005C56D2 /* WXController.m */,
 				102BBAA0192BE08F005C56D2 /* WXDailyForecast.h */,
 				102BBAA1192BE08F005C56D2 /* WXDailyForecast.m */,
+				102BBA9A192BE04C005C56D2 /* WXManager.h */,
+				102BBA9B192BE04C005C56D2 /* WXManager.m */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -217,7 +227,7 @@
 				102BBA16192BBB48005C56D2 /* Supporting Files */,
 			);
 			path = WeatherTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		102BBA16192BBB48005C56D2 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -430,8 +440,10 @@
 				102BBA07192BBB48005C56D2 /* AppDelegate.m in Sources */,
 				102BBA03192BBB48005C56D2 /* main.m in Sources */,
 				102BBA27192BBD4C005C56D2 /* WXController.m in Sources */,
+				1082622E19353DEE0038D85B /* UIImage+darkenWithColor.m in Sources */,
 				102BBA9F192BE06A005C56D2 /* WXCondition.m in Sources */,
 				102BBA99192BE016005C56D2 /* WXClient.m in Sources */,
+				102BBAAC1934F2AC005C56D2 /* UIImage+averageColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

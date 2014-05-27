@@ -70,7 +70,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "Tokyo, Japan"
+         identifier = "Hong Kong, China"
          referenceType = "1">
       </LocationScenarioReference>
    </LaunchAction>

@@ -17,5 +17,6 @@
 - (RACSignal *)fetchHourlyForecastForLocation:(CLLocationCoordinate2D)coordinate;
 - (RACSignal *)fetchDailyForecastForLocation:(CLLocationCoordinate2D)coordinate;
 - (RACSignal *)fetchImageForConditions:(NSString *)conditions atLocation:(NSString *)location;
+- (RACSignal *)fetchImageForConditions:(NSString *)conditions;
 
 @end
