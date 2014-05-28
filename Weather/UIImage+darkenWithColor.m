@@ -29,7 +29,7 @@
     
     CGContextRestoreGState(context);
     
-    CGContextSetBlendMode(context, kCGBlendModeDarken);
+    CGContextSetBlendMode(context, kCGBlendModeMultiply);
     
     CGContextDrawImage(context, area, image.CGImage);
     

@@ -52,10 +52,10 @@
     [super viewDidLoad];
     
     self.screenHeight = [UIScreen mainScreen].bounds.size.height;
-    
-    UIImage *background = [UIImage imageNamed:@"bg"];
-    self.backgroundImageView = [[UIImageView alloc] initWithImage:background];
+
+    self.backgroundImageView = [[UIImageView alloc] init];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.backgroundImageView.layer.opacity = 0;
     [self.view addSubview:self.backgroundImageView];
 
     self.blurredImageView = [[UIImageView alloc] init];
@@ -73,6 +73,7 @@
     
     
     
+    CGAffineTransform scaleZero = CGAffineTransformMakeScale(0, 0);
     CGRect headerFrame = [UIScreen mainScreen].bounds;
     CGFloat inset = 20;
     CGFloat circleSize = 200;
@@ -85,23 +86,23 @@
                                     circleSize,
                                     circleSize);
     
-    CGRect temperatureFrame = CGRectMake(circleFrame.origin.x,
-                                         circleFrame.origin.y + ((circleFrame.size.height - temperatureHeight) / 2),
+    CGRect temperatureFrame = CGRectMake(0,
+                                         (circleFrame.size.height - temperatureHeight) / 2,
                                          circleSize,
                                          temperatureHeight);
     
-    CGRect conditionsFrame = CGRectMake(circleFrame.origin.x,
-                                  temperatureFrame.origin.y - conditionHeight - 15,
-                                  circleSize,
-                                  conditionHeight);
+    CGRect conditionsFrame = CGRectMake(0,
+                                        temperatureFrame.origin.y - conditionHeight - 15,
+                                        circleSize,
+                                        conditionHeight);
     
-    CGRect hiFrame = CGRectMake(circleFrame.origin.x,
-                                  temperatureFrame.origin.y + temperatureFrame.size.height + 15,
-                                  hiLoTemperatureSize,
-                                  hiLoTemperatureSize);
+    CGRect hiFrame = CGRectMake(hiLoTemperatureSize / 4,
+                                circleSize - hiLoTemperatureSize - (hiLoTemperatureSize / 4),
+                                hiLoTemperatureSize,
+                                hiLoTemperatureSize);
     
     CGRect loFrame = hiFrame;
-    loFrame.origin.x = circleFrame.origin.x + (circleFrame.size.width - hiLoTemperatureSize);
+    loFrame.origin.x = circleSize - hiLoTemperatureSize - (hiLoTemperatureSize / 4);
     
     UIView *header = [[UIView alloc] initWithFrame:headerFrame];
     header.backgroundColor = [UIColor clearColor];
@@ -109,8 +110,7 @@
     
     self.circleView = [[UIView alloc] initWithFrame:circleFrame];
     self.circleView.layer.cornerRadius = circleSize / 2;
-    self.circleView.layer.borderWidth = 2;
-    self.circleView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.circleView.transform = scaleZero;
     [header addSubview:self.circleView];
     
     UILabel *temperatureLabel = [[UILabel alloc] initWithFrame:temperatureFrame];
@@ -119,7 +119,15 @@
     temperatureLabel.text = @"0°";
     temperatureLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:76];
     temperatureLabel.textAlignment = NSTextAlignmentCenter;
-    [header addSubview:temperatureLabel];
+    [self.circleView addSubview:temperatureLabel];
+    
+    UILabel *conditionsLabel = [[UILabel alloc] initWithFrame:conditionsFrame];
+    conditionsLabel.backgroundColor = [UIColor clearColor];
+    conditionsLabel.textColor = [UIColor whiteColor];
+    conditionsLabel.text = @"";
+    conditionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    conditionsLabel.textAlignment = NSTextAlignmentCenter;
+    [self.circleView addSubview:conditionsLabel];
     
     UILabel *hiLabel = [[UILabel alloc] initWithFrame:hiFrame];
     hiLabel.backgroundColor = [UIColor whiteColor];
@@ -129,7 +137,8 @@
     hiLabel.textAlignment = NSTextAlignmentCenter;
     hiLabel.layer.cornerRadius = hiLoTemperatureSize / 2;
     hiLabel.layer.masksToBounds = YES;
-    [header addSubview:hiLabel];
+    hiLabel.transform = scaleZero;
+    [self.circleView addSubview:hiLabel];
     
     UILabel *loLabel = [[UILabel alloc] initWithFrame:loFrame];
     loLabel.layer.cornerRadius = hiLoTemperatureSize / 2;
@@ -140,7 +149,8 @@
     loLabel.textAlignment = NSTextAlignmentCenter;
     loLabel.layer.cornerRadius = hiLoTemperatureSize / 2;
     loLabel.layer.masksToBounds = YES;
-    [header addSubview:loLabel];
+    loLabel.transform = scaleZero;
+    [self.circleView addSubview:loLabel];
     
     UILabel *cityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, inset, headerFrame.size.width, 30)];
     cityLabel.backgroundColor = [UIColor clearColor];
@@ -150,24 +160,39 @@
     cityLabel.textAlignment = NSTextAlignmentCenter;
     [header addSubview:cityLabel];
     
-    UILabel *conditionsLabel = [[UILabel alloc] initWithFrame:conditionsFrame];
-    conditionsLabel.backgroundColor = [UIColor clearColor];
-    conditionsLabel.textColor = [UIColor whiteColor];
-    conditionsLabel.text = @"";
-    conditionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    conditionsLabel.textAlignment = NSTextAlignmentCenter;
-    [header addSubview:conditionsLabel];
-    
     [[WXManager sharedManager] findCurrentLocation];
     
     [[RACObserve([WXManager sharedManager], currentCondition) deliverOn:RACScheduler.mainThreadScheduler] subscribeNext:^(WXCondition *newCondition) {
         if (newCondition) {
             UIColor *backgroundColor = [[newCondition temperatureColor] colorWithAlphaComponent:0.5];
             
-            self.tableView.tableHeaderView.backgroundColor = backgroundColor;
+            self.circleView.backgroundColor = backgroundColor;
             temperatureLabel.text = [NSString stringWithFormat:@"%.0f°", newCondition.temperature.floatValue];
             conditionsLabel.text = [newCondition.condition capitalizedString];
             cityLabel.text = [newCondition.locationName capitalizedString];
+            
+            [UIView animateWithDuration:0.4
+                                  delay:0
+                 usingSpringWithDamping:0.7
+                  initialSpringVelocity:0.2
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 CGAffineTransform scaleTrans = CGAffineTransformMakeScale(1, 1);
+                                 self.circleView.transform = scaleTrans;
+                             }
+                             completion:nil];
+            
+            [UIView animateWithDuration:0.6
+                                  delay:0.2
+                 usingSpringWithDamping:0.6
+                  initialSpringVelocity:0.1
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 CGAffineTransform scaleTrans = CGAffineTransformMakeScale(1, 1);
+                                 hiLabel.transform = scaleTrans;
+                                 loLabel.transform = scaleTrans;
+                             }
+                             completion:nil];
         }
     }];
     
@@ -185,9 +210,13 @@
             NSData *data = [NSData dataWithContentsOfURL:url];
             UIImage *image = [[UIImage alloc] initWithData:data];
             
-            self.backgroundImageView.image = image;
+            self.backgroundImageView.image = [image darkenWithColor:[[[WXManager sharedManager] currentCondition] temperatureColor]];
             
             [self.blurredImageView setImageToBlur:image blurRadius:10 completionBlock:nil];
+            
+            [UIView animateWithDuration:0.3 animations:^{
+                self.backgroundImageView.layer.opacity = 1;
+            }];
         }
     }];
     
