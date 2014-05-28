@@ -40,8 +40,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    NSLog(@"hi");
-    [[WXManager sharedManager] findCurrentLocation];
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

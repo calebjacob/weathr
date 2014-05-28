@@ -27,6 +27,9 @@
 @implementation WXController
 
 - (id)init {
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self selector:@selector(refresh) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
     if (self = [super init]) {
         self.hourlyFormatter = [[NSDateFormatter alloc] init];
         self.hourlyFormatter.dateFormat = @"h a";
@@ -323,6 +326,11 @@
     cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
     cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
     cell.backgroundColor = [[weather temperatureColor] colorWithAlphaComponent:0.5];
+}
+
+- (void)refresh {
+    NSLog(@"Refreshing content...");
+    [[WXManager sharedManager] findCurrentLocation];
 }
 
 #pragma mark - UIScorllViewDelegate
