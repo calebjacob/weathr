@@ -103,4 +103,40 @@
     return [WXCondition imageMap][self.icon];
 }
 
+- (UIColor *)temperatureColor {
+    NSInteger temperature = self.temperature.integerValue > 0 ? self.temperature.integerValue : self.tempHigh.integerValue;
+    
+    if (temperature >= 95) {
+        return [UIColor colorWithRed:1 green:0.392 blue:0.373 alpha:1];
+    }
+    
+    else if (temperature >= 90) {
+        return [UIColor colorWithRed:1 green:0.592 blue:0.369 alpha:1];
+    }
+    
+    else if (temperature >= 85) {
+        return [UIColor colorWithRed:1 green:0.816 blue:0.314 alpha:1];
+    }
+    
+    else if (temperature >= 80) {
+        return [UIColor colorWithRed:0.373 green:0.729 blue:0.408 alpha:1];
+    }
+    
+    else if (temperature >= 75) {
+        return [UIColor colorWithRed:0 green:0.729 blue:0.698 alpha:1];
+    }
+    
+    else if (temperature >= 55) {
+        return [UIColor colorWithRed:0.161 green:0.753 blue:0.867 alpha:1];
+    }
+    
+    else if (temperature >= 35) {
+        return [UIColor colorWithRed:0 green:0.514 blue:0.769 alpha:1];
+    }
+    
+    else {
+        return [UIColor colorWithRed:0.204 green:0.29 blue:0.565 alpha:1];
+    }
+}
+
 @end

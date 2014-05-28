@@ -67,7 +67,7 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.separatorColor = [UIColor colorWithWhite:1 alpha:0.2];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.pagingEnabled = YES;
     [self.view addSubview:self.tableView];
     
@@ -77,7 +77,7 @@
     CGFloat inset = 20;
     CGFloat circleSize = 200;
     CGFloat temperatureHeight = 60;
-    CGFloat hiHeight = 30;
+    CGFloat hiLoTemperatureSize = 42;
     CGFloat conditionHeight = 30;
     
     CGRect circleFrame = CGRectMake((headerFrame.size.width - circleSize) / 2,
@@ -97,19 +97,21 @@
     
     CGRect hiFrame = CGRectMake(circleFrame.origin.x,
                                   temperatureFrame.origin.y + temperatureFrame.size.height + 15,
-                                  (circleSize / 2) - 5,
-                                  hiHeight);
+                                  hiLoTemperatureSize,
+                                  hiLoTemperatureSize);
     
     CGRect loFrame = hiFrame;
-    loFrame.origin.x = circleFrame.origin.x + (circleFrame.size.width / 2);
+    loFrame.origin.x = circleFrame.origin.x + (circleFrame.size.width - hiLoTemperatureSize);
     
     UIView *header = [[UIView alloc] initWithFrame:headerFrame];
     header.backgroundColor = [UIColor clearColor];
     self.tableView.tableHeaderView = header;
     
-//    self.circleView = [[UIView alloc] initWithFrame:circleFrame];
-//    self.circleView.layer.cornerRadius = circleSize / 2;
-//    [header addSubview:self.circleView];
+    self.circleView = [[UIView alloc] initWithFrame:circleFrame];
+    self.circleView.layer.cornerRadius = circleSize / 2;
+    self.circleView.layer.borderWidth = 2;
+    self.circleView.layer.borderColor = [UIColor whiteColor].CGColor;
+    [header addSubview:self.circleView];
     
     UILabel *temperatureLabel = [[UILabel alloc] initWithFrame:temperatureFrame];
     temperatureLabel.backgroundColor = [UIColor clearColor];
@@ -120,19 +122,24 @@
     [header addSubview:temperatureLabel];
     
     UILabel *hiLabel = [[UILabel alloc] initWithFrame:hiFrame];
-    hiLabel.backgroundColor = [UIColor clearColor];
+    hiLabel.backgroundColor = [UIColor whiteColor];
     hiLabel.textColor = [UIColor colorWithRed:1 green:0.384 blue:0.357 alpha:1];
     hiLabel.text = @"0°";
     hiLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    hiLabel.textAlignment = NSTextAlignmentRight;
+    hiLabel.textAlignment = NSTextAlignmentCenter;
+    hiLabel.layer.cornerRadius = hiLoTemperatureSize / 2;
+    hiLabel.layer.masksToBounds = YES;
     [header addSubview:hiLabel];
     
     UILabel *loLabel = [[UILabel alloc] initWithFrame:loFrame];
-    loLabel.backgroundColor = [UIColor clearColor];
+    loLabel.layer.cornerRadius = hiLoTemperatureSize / 2;
+    loLabel.backgroundColor = [UIColor whiteColor];
     loLabel.textColor = [UIColor colorWithRed:0.051 green:0.38 blue:0.682 alpha:1];
     loLabel.text = @"0°";
     loLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    loLabel.textAlignment = NSTextAlignmentLeft;
+    loLabel.textAlignment = NSTextAlignmentCenter;
+    loLabel.layer.cornerRadius = hiLoTemperatureSize / 2;
+    loLabel.layer.masksToBounds = YES;
     [header addSubview:loLabel];
     
     UILabel *cityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, inset, headerFrame.size.width, 30)];
@@ -155,6 +162,9 @@
     
     [[RACObserve([WXManager sharedManager], currentCondition) deliverOn:RACScheduler.mainThreadScheduler] subscribeNext:^(WXCondition *newCondition) {
         if (newCondition) {
+            UIColor *backgroundColor = [[newCondition temperatureColor] colorWithAlphaComponent:0.5];
+            
+            self.tableView.tableHeaderView.backgroundColor = backgroundColor;
             temperatureLabel.text = [NSString stringWithFormat:@"%.0f°", newCondition.temperature.floatValue];
             conditionsLabel.text = [newCondition.condition capitalizedString];
             cityLabel.text = [newCondition.locationName capitalizedString];
@@ -174,11 +184,8 @@
             NSURL *url = [NSURL URLWithString:imageURLString];
             NSData *data = [NSData dataWithContentsOfURL:url];
             UIImage *image = [[UIImage alloc] initWithData:data];
-            UIColor *averageImageColor = [image averageColor];
-            UIColor *backgroundColor = [averageImageColor colorWithAlphaComponent:0.5];
             
             self.backgroundImageView.image = image;
-            self.tableView.tableHeaderView.backgroundColor = backgroundColor;
             
             [self.blurredImageView setImageToBlur:image blurRadius:10 completionBlock:nil];
         }
@@ -275,6 +282,7 @@
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
     cell.imageView.image = [UIImage imageNamed:[weather imageName]];
     cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    cell.backgroundColor = [[weather temperatureColor] colorWithAlphaComponent:0.5];
 }
 
 - (void)configureDailyCell:(UITableViewCell *)cell weather:(WXCondition *)weather {
@@ -284,6 +292,8 @@
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.tempHigh.floatValue, weather.tempLow.floatValue];
     cell.imageView.image = [UIImage imageNamed:[weather imageName]];
     cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    cell.backgroundColor = [[weather temperatureColor] colorWithAlphaComponent:0.5];
 }
 
 #pragma mark - UIScorllViewDelegate
